@@ -7,6 +7,7 @@
         <h4 style="text-align-last: center;">Paula Eden</h4> <br />
         Master Architektur <br />
         eden@gmx.de <br />
+        +491242133123 <br>
       </p>
     </div>
     <NuxtPage id="page-view"></NuxtPage>
@@ -34,10 +35,9 @@ import "~/assets/css/main.css";
 }
 
 #layout-wrapper {
-  padding: 2rem;
+  padding: 5rem;
   display: flex;
-  height: 100vh;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 #page-view {
   padding-inline: 2rem;
