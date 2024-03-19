@@ -1,14 +1,21 @@
 <template>
   <div id="layout-wrapper">
-    <div id="contact-data">
-      <div class="circle-blue"></div>
-      <br />
-      <p>
-        <h4 style="text-align-last: center;">Paula Eden</h4> <br />
-        Master Architektur <br />
-        eden@gmx.de <br />
-        +491242133123 <br>
-      </p>
+    <div id="contact-data-wrapper">
+      <div id="contact-data">
+        <div class="circle-blue"></div>
+        <br />
+        <p>
+          <h4 style="text-align-last: center;"><strong>Paula Eden</strong></h4> 
+          <br />
+          Master Architektur <br />
+          eden@gmx.de <br />
+          +491242133123 <br>
+        </p>
+        <a style="display: flex; align-items: center; justify-content: space-between;">
+          <p style="text-transform: uppercase; margin: 0"><strong>Portfolio</strong></p>  
+          <img src="/png/download.png" alt="download button" style=" height: 1.25rem;">
+        </a>
+      </div>
     </div>
     <NuxtPage id="page-view"></NuxtPage>
   </div>
@@ -40,6 +47,21 @@ import "~/assets/css/main.css";
   justify-content: space-between;
 }
 #page-view {
-  padding-inline: 2rem;
+  padding-left: 4rem;
 }
+
+@media (max-width: 768px) {
+  #layout-wrapper {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }  
+  #contact-data {
+    margin-bottom: 4rem
+  }
+  #page-view {
+    padding: 0;
+  }  
+  }
 </style>

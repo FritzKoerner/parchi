@@ -26,7 +26,7 @@
   color: black;
 }
 .project-card:hover {
-    cursor: url(/public/SVG/cursor-pointer.svg), pointer;
+    cursor: url(SVG/cursor-pointer.svg), pointer;
 }
 
 .project-card:hover .project-title {
@@ -44,7 +44,7 @@
   aspect-ratio: 13/8;
   max-width: 100%;
   max-height: 100%;
-  width: 500px;
+  width: 100%;
   margin: 0;
 }
 .image-card-front {
