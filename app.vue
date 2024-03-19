@@ -12,7 +12,7 @@
           +491242133123 <br>
         </p>
         <a style="display: flex; align-items: center; justify-content: space-between;">
-          <p style="text-transform: uppercase; margin: 0"><strong>Portfolio</strong></p>  
+          <p style="text-transform: uppercase;"><strong>Portfolio</strong></p>  
           <img src="/png/download.png" alt="download button" style=" height: 1.25rem;">
         </a>
       </div>
