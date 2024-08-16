@@ -2,13 +2,14 @@
   <div class="wrapper-page">
     <h5 class="header-projects">Projekte...</h5>
     <div class="overview-grid">
-      <ProjectCard></ProjectCard>
-      <ProjectCard></ProjectCard>
-      <ProjectCard></ProjectCard>
-      <ProjectCard></ProjectCard>
+      <ProjectCard v-for="proj in projects" :id="proj"></ProjectCard>
     </div>
   </div>
 </template>
+
+<script setup>
+const { data: projects } = await useFetch("http://localhost:3030/projects");
+</script>
 
 <style>
 .wrapper-page {

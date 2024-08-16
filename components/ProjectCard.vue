@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink class="project-card" to="project-detail">
+  <NuxtLink class="project-card" :to="`project-detail/${id}`">
     <h2 class="project-title">Projekttitel</h2>
     <!-- <div class="wrapper-image-card-project"> -->
     <img
@@ -16,7 +16,16 @@
   </NuxtLink>
 </template>
 
-<script></script>
+<script>
+export default {
+  props: {
+    id: {
+      type: String,
+      required: true,
+    },
+  },
+};
+</script>
 <style>
 .project-card {
   margin: 0;
@@ -26,7 +35,7 @@
   color: black;
 }
 .project-card:hover {
-    cursor: url(SVG/cursor-pointer.svg), pointer;
+  cursor: url(SVG/cursor-pointer.svg), pointer;
 }
 
 .project-card:hover .project-title {

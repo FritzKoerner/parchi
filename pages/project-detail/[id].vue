@@ -13,10 +13,10 @@
         "
         id="carousel"
       >
-        <div v-for="(item, index) in images" class="carousel-image-wrapper">
+        <div v-for="image in images" class="carousel-image-wrapper">
           <img
-            :src="'images/' + item.name"
-            :alt="item.alt"
+            :src="`http://localhost:3030/projectFiles/${$route.params.id}/${image}`"
+            :alt="image"
             class="carousel-image"
           />
         </div>
@@ -60,44 +60,39 @@
         />
       </svg>
     </div>
-    <p>
-      {{ text }}
-    </p>
+    <client-only>
+      <div style="white-space: pre">{{ text }}</div>
+    </client-only>
   </div>
 </template>
 
+<script setup>
+const route = useRoute();
+const { data: images } = await useLazyFetch(
+  `http://localhost:3030/projects/${route.params.id}`
+);
+const { data: text } = await useLazyFetch(
+  `http://localhost:3030/projectFiles/${route.params.id}/desc.txt`
+);
+</script>
+
 <script>
 export default {
-  computed: {
-    images() {
-    
-    }
-  },
-  data() {
-    return {
-      images: [
-        {
-          name: "beispiel.jpg",
-          alt: "beispiel",
-        },
-        {
-          name: "modell.jpg",
-          alt: "modell",
-        },
-        {
-          name: "postcardTest.jpg",
-          alt: "postcard Test",
-        },
-      ],
-      text: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet,",
-    };
-  },
   methods: {
     scrollNext() {
-      const width = document.querySelector(
-        ".carousel-image-wrapper"
-      ).offsetWidth;
-      document.getElementById("carousel").scrollBy({
+      let width = document.querySelector(".carousel-image-wrapper").offsetWidth;
+
+      const carouselElement = document.getElementById("carousel");
+      console.log(carouselElement.scrollLeft);
+      console.log(width);
+      console.log(carouselElement.scrollLeft < width);
+      if (carouselElement.scrollLeft < width) {
+        width = width * 2;
+      }
+      console.log(carouselElement.scrollLeft);
+      console.log(width);
+      console.log(carouselElement.scrollLeft < width);
+      carouselElement.scrollBy({
         left: width,
       });
     },
