@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%">
-    <div style="position: relative;">
+    <div style="position: relative">
       <div
         style="
           height: 80vh;
@@ -21,8 +21,44 @@
           />
         </div>
       </div>
-      <button @click="scrollNext()" id="button-next">Weiter</button>
-      <button @click="scrollPrevious()" id="button-prev">Zurück</button>
+      <svg
+        width="80"
+        height="80"
+        xmlns="http://www.w3.org/2000/svg"
+        @click="scrollNext()"
+        id="button-next"
+      >
+        <defs>
+          <filter id="f1">
+            <feDropShadow dx="2" dy="5" stdDeviation="2" flood-opacity="0.3" />
+          </filter>
+        </defs>
+        <polygon
+          points="50,24 0,0 0,50"
+          style="fill: #0000ff"
+          filter="url(#f1)"
+          transform="translate(15, 15)"
+        />
+      </svg>
+      <svg
+        width="80"
+        height="80"
+        xmlns="http://www.w3.org/2000/svg"
+        @click="scrollPrevious()"
+        id="button-prev"
+      >
+        <defs>
+          <filter id="f2">
+            <feDropShadow dx="3" dy="5" stdDeviation="2" flood-opacity="0.3" />
+          </filter>
+        </defs>
+        <polygon
+          points="0,24 50,0 50,50"
+          style="fill: #0000ff"
+          filter="url(#f2)"
+          transform="translate(15, 15)"
+        />
+      </svg>
     </div>
     <p>
       {{ text }}
@@ -32,6 +68,11 @@
 
 <script>
 export default {
+  computed: {
+    images() {
+    
+    }
+  },
   data() {
     return {
       images: [
@@ -53,18 +94,22 @@ export default {
   },
   methods: {
     scrollNext() {
-      const width = document.querySelector('.carousel-image-wrapper').offsetWidth
-      document.getElementById('carousel').scrollBy({
-        left: width
-      })
+      const width = document.querySelector(
+        ".carousel-image-wrapper"
+      ).offsetWidth;
+      document.getElementById("carousel").scrollBy({
+        left: width,
+      });
     },
     scrollPrevious() {
-      const width = document.querySelector('.carousel-image-wrapper').offsetWidth
-      document.getElementById('carousel').scrollBy({
-        left: width * -1
-      })
-    }
-  }
+      const width = document.querySelector(
+        ".carousel-image-wrapper"
+      ).offsetWidth;
+      document.getElementById("carousel").scrollBy({
+        left: width * -1,
+      });
+    },
+  },
 };
 </script>
 
