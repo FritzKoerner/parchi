@@ -48,6 +48,7 @@ import "~/assets/css/main.css";
 }
 #page-view {
   padding-left: 4rem;
+  flex-grow: 1;
 }
 
 @media (max-width: 768px) {

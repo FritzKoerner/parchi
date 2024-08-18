@@ -2,7 +2,7 @@
   <div class="wrapper-page">
     <h5 class="header-projects">Projekte...</h5>
     <div class="overview-grid">
-      <ProjectCard v-for="proj in projects" :id="proj"></ProjectCard>
+      <ProjectCard v-for="proj in projects" :project="proj"></ProjectCard>
     </div>
   </div>
 </template>

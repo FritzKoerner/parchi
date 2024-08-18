@@ -1,31 +1,36 @@
 <template>
-  <NuxtLink class="project-card" :to="`project-detail/${id}`">
-    <h2 class="project-title">Projekttitel</h2>
-    <!-- <div class="wrapper-image-card-project"> -->
-    <img
-      src="/images/beispiel.jpg"
-      alt="oscar niemeyer paris"
-      class="image-card image-card-front"
-    />
-    <img
-      src="/images/postcardTest.jpg"
-      alt="child on street"
-      class="image-card image-card-back"
-    />
-    <!-- </div> -->
+  <NuxtLink class="project-card" :to="`project-detail/${project}`">
+    <h2 class="project-title">{{ project }}</h2>
+    <div class="wrapper-image-card-project">
+      <img
+        :src="`http://localhost:3030/projectFiles/${project}/${imageFront}`"
+        :alt="imageFront"
+        class="image-card image-card-front"
+      />
+      <img
+        :src="`http://localhost:3030/projectFiles/${project}/${imageBack}`"
+        :alt="imageBack"
+        class="image-card image-card-back"
+      />
+    </div>
   </NuxtLink>
 </template>
 
-<script>
-export default {
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
+<script setup>
+const props = defineProps({
+  project: {
+    type: String,
+    required: true,
   },
-};
+});
+const { data: images } = await useFetch(
+  `http://localhost:3030/projects/${props.project}`
+);
+const values = images.value;
+const imageFront = values[0];
+const imageBack = values[1] ?? images[0];
 </script>
+
 <style>
 .project-card {
   margin: 0;

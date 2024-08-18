@@ -1,27 +1,23 @@
 <template>
-  <div style="width: 100%">
-    <div style="position: relative">
-      <div
-        style="
-          height: 80vh;
-          width: 100%;
-          position: relative;
-          overflow-y: hidden;
-          overflow-x: scroll;
-          display: flex;
-          scroll-snap-type: x mandatory;
-        "
-        id="carousel"
-      >
-        <div v-for="image in images" class="carousel-image-wrapper">
+  <div>
+    <div class="wrapper-flex-center">
+      <div id="carousel" data-mouse-down-at="0" data-prev-percentage="0">
+        <!-- <div v-for="image in images" class="carousel-image-wrapper">
           <img
             :src="`http://localhost:3030/projectFiles/${$route.params.id}/${image}`"
             :alt="image"
             class="carousel-image"
           />
-        </div>
+        </div> -->
+        <img
+          v-for="image in images"
+          :src="`http://localhost:3030/projectFiles/${$route.params.id}/${image}`"
+          :alt="image"
+          class="carousel-image"
+          draggable="false"
+        />
       </div>
-      <svg
+      <!-- <svg
         width="80"
         height="80"
         xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +54,7 @@
           filter="url(#f2)"
           transform="translate(15, 15)"
         />
-      </svg>
+      </svg> -->
     </div>
     <client-only>
       <div style="white-space: pre">{{ text }}</div>
@@ -78,21 +74,71 @@ const { data: text } = await useLazyFetch(
 
 <script>
 export default {
+  mounted() {
+    const track = document.getElementById("carousel");
+    const handleOnDown = (e) => {
+      track.dataset.mouseDownAt = e.clientX;
+      console.log(track);
+    };
+
+    const handleOnUp = () => {
+      track.dataset.mouseDownAt = "0";
+      track.dataset.prevPercentage = track.dataset.percentage;
+    };
+
+    const handleOnMove = (e) => {
+      if (track.dataset.mouseDownAt === "0") return;
+
+      const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
+        maxDelta = track.innerWidth / 2;
+
+      const percentage = (mouseDelta / maxDelta) * -100,
+        nextPercentageUnconstrained =
+          parseFloat(track.dataset.prevPercentage) + percentage,
+        nextPercentage = Math.max(
+          Math.min(nextPercentageUnconstrained, 0),
+          -100
+        );
+
+      track.dataset.percentage = nextPercentage;
+
+      // track.animate(
+      //   {
+      //     transform: `translate(${nextPercentage}%, -50%)`,
+      //   },
+      //   { duration: 1200, fill: "forwards" }
+      // );
+
+      // for (const image of track.getElementsByClassName("carousel-image")) {
+      //   image.animate(
+      //     {
+      //       objectPosition: `${100 + nextPercentage}% center`,
+      //     },
+      //     { duration: 1200, fill: "forwards" }
+      //   );
+      // }
+    };
+
+    /* -- Had to add extra lines for touch events -- */
+    // window.addEventListener("mousedown", (e) => handleOnDown(e));
+    window.onmousedown = (e) => handleOnDown(e);
+
+    window.ontouchstart = (e) => handleOnDown(e.touches[0]);
+
+    window.onmouseup = (e) => handleOnUp(e);
+
+    window.ontouchend = (e) => handleOnUp(e.touches[0]);
+
+    window.onmousemove = (e) => handleOnMove(e);
+
+    window.ontouchmove = (e) => handleOnMove(e.touches[0]);
+  },
   methods: {
     scrollNext() {
-      let width = document.querySelector(".carousel-image-wrapper").offsetWidth;
-
-      const carouselElement = document.getElementById("carousel");
-      console.log(carouselElement.scrollLeft);
-      console.log(width);
-      console.log(carouselElement.scrollLeft < width);
-      if (carouselElement.scrollLeft < width) {
-        width = width * 2;
-      }
-      console.log(carouselElement.scrollLeft);
-      console.log(width);
-      console.log(carouselElement.scrollLeft < width);
-      carouselElement.scrollBy({
+      const width = document.querySelector(
+        ".carousel-image-wrapper"
+      ).offsetWidth;
+      document.getElementById("carousel").scrollBy({
         left: width,
       });
     },
@@ -122,14 +168,23 @@ export default {
   right: 10px;
   transform: translateY(-50%);
 }
-.carousel-image-wrapper {
-  padding: 0.5rem;
-  width: 100%;
-  flex-shrink: 0;
-  scroll-snap-align: center;
+
+#carousel {
+  overflow: hidden;
+  display: flex;
+  gap: 4vmin;
+}
+.wrapper-flex-center {
   display: flex;
   justify-content: center;
-  scroll-snap-stop: always;
+  align-items: center;
+}
+
+.carousel-image-wrapper {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {
@@ -138,8 +193,9 @@ export default {
   }
 }
 .carousel-image {
-  max-width: 100%;
-  object-fit: contain;
-  height: 100%;
+  width: 40vmin;
+  height: 70vh;
+  object-fit: cover;
+  object-position: 100% center;
 }
 </style>
