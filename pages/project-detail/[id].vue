@@ -1,63 +1,20 @@
 <template>
   <div>
     <div class="wrapper-flex-center">
-      <div id="carousel" data-mouse-down-at="0" data-prev-percentage="0">
-        <!-- <div v-for="image in images" class="carousel-image-wrapper">
+      <div id="carousel">
+        <div id="track">
           <img
+            v-for="image in images"
             :src="`http://localhost:3030/projectFiles/${$route.params.id}/${image}`"
             :alt="image"
             class="carousel-image"
+            draggable="false"
           />
-        </div> -->
-        <img
-          v-for="image in images"
-          :src="`http://localhost:3030/projectFiles/${$route.params.id}/${image}`"
-          :alt="image"
-          class="carousel-image"
-          draggable="false"
-        />
+        </div>
       </div>
-      <!-- <svg
-        width="80"
-        height="80"
-        xmlns="http://www.w3.org/2000/svg"
-        @click="scrollNext()"
-        id="button-next"
-      >
-        <defs>
-          <filter id="f1">
-            <feDropShadow dx="2" dy="5" stdDeviation="2" flood-opacity="0.3" />
-          </filter>
-        </defs>
-        <polygon
-          points="50,24 0,0 0,50"
-          style="fill: #0000ff"
-          filter="url(#f1)"
-          transform="translate(15, 15)"
-        />
-      </svg>
-      <svg
-        width="80"
-        height="80"
-        xmlns="http://www.w3.org/2000/svg"
-        @click="scrollPrevious()"
-        id="button-prev"
-      >
-        <defs>
-          <filter id="f2">
-            <feDropShadow dx="3" dy="5" stdDeviation="2" flood-opacity="0.3" />
-          </filter>
-        </defs>
-        <polygon
-          points="0,24 50,0 50,50"
-          style="fill: #0000ff"
-          filter="url(#f2)"
-          transform="translate(15, 15)"
-        />
-      </svg> -->
     </div>
     <client-only>
-      <div style="white-space: pre">{{ text }}</div>
+      <div class="description-text">{{ text }}</div>
     </client-only>
   </div>
 </template>
@@ -74,49 +31,56 @@ const { data: text } = await useLazyFetch(
 
 <script>
 export default {
+  data() {
+    return {
+      mouseDownAt: "0",
+      prevPercentage: "0",
+      precentage: "",
+    };
+  },
   mounted() {
-    const track = document.getElementById("carousel");
+    const track = document.getElementById("track");
     const handleOnDown = (e) => {
-      track.dataset.mouseDownAt = e.clientX;
-      console.log(track);
+      this.mouseDownAt = e.clientX;
     };
 
     const handleOnUp = () => {
-      track.dataset.mouseDownAt = "0";
-      track.dataset.prevPercentage = track.dataset.percentage;
+      this.mouseDownAt = "0";
+      this.prevPercentage = this.percentage;
     };
 
     const handleOnMove = (e) => {
-      if (track.dataset.mouseDownAt === "0") return;
+      if (this.mouseDownAt === "0") return;
+      const mouseDelta = parseFloat(this.mouseDownAt) - e.clientX;
+      const maxDelta = track.clientWidth * 1.1;
+      const prevTemp = this.prevPercentage || "0"
 
-      const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
-        maxDelta = track.innerWidth / 2;
 
-      const percentage = (mouseDelta / maxDelta) * -100,
-        nextPercentageUnconstrained =
-          parseFloat(track.dataset.prevPercentage) + percentage,
-        nextPercentage = Math.max(
-          Math.min(nextPercentageUnconstrained, 0),
-          -100
+      const percentage = (mouseDelta / maxDelta) * -100;
+      const nextPercentageUnconstrained =
+        parseFloat(prevTemp) + percentage;
+      const nextPercentage = Math.max(
+        Math.min(nextPercentageUnconstrained, 33),
+        -33
+      );
+
+      this.percentage = nextPercentage;
+      console.log(nextPercentage);
+      track.animate(
+        {
+          transform: `translate(${nextPercentage}%, 0)`,
+        },
+        { duration: 1200, fill: "forwards" }
+      );
+
+      for (const image of track.getElementsByClassName("carousel-image")) {
+        image.animate(
+          {
+            objectPosition: `${50 + nextPercentage}% center`,
+          },
+          { duration: 1200, fill: "forwards" }
         );
-
-      track.dataset.percentage = nextPercentage;
-
-      // track.animate(
-      //   {
-      //     transform: `translate(${nextPercentage}%, -50%)`,
-      //   },
-      //   { duration: 1200, fill: "forwards" }
-      // );
-
-      // for (const image of track.getElementsByClassName("carousel-image")) {
-      //   image.animate(
-      //     {
-      //       objectPosition: `${100 + nextPercentage}% center`,
-      //     },
-      //     { duration: 1200, fill: "forwards" }
-      //   );
-      // }
+      }
     };
 
     /* -- Had to add extra lines for touch events -- */
@@ -133,46 +97,18 @@ export default {
 
     window.ontouchmove = (e) => handleOnMove(e.touches[0]);
   },
-  methods: {
-    scrollNext() {
-      const width = document.querySelector(
-        ".carousel-image-wrapper"
-      ).offsetWidth;
-      document.getElementById("carousel").scrollBy({
-        left: width,
-      });
-    },
-    scrollPrevious() {
-      const width = document.querySelector(
-        ".carousel-image-wrapper"
-      ).offsetWidth;
-      document.getElementById("carousel").scrollBy({
-        left: width * -1,
-      });
-    },
-  },
 };
 </script>
 
 <style>
-#button-prev {
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
-}
-
-#button-next {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-}
-
 #carousel {
   overflow: hidden;
+}
+
+#track {
+  overflow: hidden;
   display: flex;
-  gap: 4vmin;
+  gap: 8vmin;
 }
 .wrapper-flex-center {
   display: flex;
@@ -180,22 +116,17 @@ export default {
   align-items: center;
 }
 
-.carousel-image-wrapper {
-  width: 100%;
-  flex-shrink: 0;
-  display: flex;
-  justify-content: center;
-}
-
-@media (max-width: 768px) {
-  .carousel-image-wrapper {
-    padding: 0;
-  }
-}
 .carousel-image {
-  width: 40vmin;
+  /* transform: translate(-50%, 0); */
+  width: 33%;
   height: 70vh;
   object-fit: cover;
-  object-position: 100% center;
+  object-position: center center;
 }
+.description-text {
+  font-size: 1.2rem;
+  padding: 1.8rem;
+  white-space: pre;
+}
+
 </style>

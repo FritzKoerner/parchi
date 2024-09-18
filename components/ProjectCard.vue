@@ -53,6 +53,7 @@ const imageBack = values[1] ?? images[0];
   transition: opacity 1s;
   opacity: 0;
 }
+
 .image-card {
   object-fit: cover;
   aspect-ratio: 13/8;
@@ -64,6 +65,7 @@ const imageBack = values[1] ?? images[0];
 .image-card-front {
   position: relative;
   z-index: 2;
+  transition: opacity 1s;
 }
 
 .image-card-back {
@@ -80,6 +82,7 @@ const imageBack = values[1] ?? images[0];
   margin: 0;
   text-align: start;
   opacity: 0;
+  transition: opacity 0.2s, top 0.5s;
 }
 .project-subtitle {
   margin-bottom: 0.25rem;

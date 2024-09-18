@@ -4,16 +4,26 @@
       <div id="contact-data">
         <div class="circle-blue"></div>
         <br />
+        <h4 style="text-align-last: center"><strong>Paula Eden</strong></h4>
         <p>
-          <h4 style="text-align-last: center;"><strong>Paula Eden</strong></h4> 
           <br />
           Master Architektur <br />
           eden@gmx.de <br />
-          +491242133123 <br>
+          +491242133123 <br />
         </p>
-        <a style="display: flex; align-items: center; justify-content: space-between;">
-          <p style="text-transform: uppercase;"><strong>Portfolio</strong></p>  
-          <img src="/png/download.png" alt="download button" style=" height: 1.25rem;">
+        <a
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <p style="text-transform: uppercase"><strong>Portfolio</strong></p>
+          <img
+            src="/png/download.png"
+            alt="download button"
+            style="height: 1.25rem"
+          />
         </a>
       </div>
     </div>
@@ -42,7 +52,9 @@ import "~/assets/css/main.css";
 }
 
 #layout-wrapper {
-  padding: 5rem;
+  padding-top: 5rem;
+  padding-left: 5rem;
+  padding-right: 5rem;
   display: flex;
   justify-content: space-between;
 }
@@ -56,13 +68,15 @@ import "~/assets/css/main.css";
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
-  }  
+    padding-top: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
   #contact-data {
-    margin-bottom: 4rem
+    margin-bottom: 4rem;
   }
   #page-view {
     padding: 0;
-  }  
   }
+}
 </style>
